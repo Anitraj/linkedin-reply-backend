@@ -27,7 +27,7 @@ Keep each reply short and natural.
           "Content-Type": "application/json"
         },
         body: JSON.stringify({
-          model: "gpt-4.1",
+          model: "gpt-4o-mini",
           messages: [
             {
               role: "user",
@@ -40,13 +40,21 @@ Keep each reply short and natural.
 
     const data = await response.json();
 
-    const text = data.choices[0].message.content;
+console.log("OpenAI response:", data);
 
-    const suggestions = text
-      .split("\n")
-      .filter(line => line.trim());
+if (!data.choices || !data.choices.length) {
+  return res.status(500).json({
+    error: data.error || "OpenAI returned no choices"
+  });
+}
 
-    res.json({ suggestions });
+const text = data.choices[0].message.content;
+
+const suggestions = text
+  .split("\n")
+  .filter(line => line.trim());
+
+res.json({ suggestions });
 
   } catch (error) {
     console.error(error);
