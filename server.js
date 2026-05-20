@@ -11,11 +11,17 @@ app.post("/api/suggest", async (req, res) => {
     const messages = req.body.messages || [];
 
     const prompt = `
-Based on this LinkedIn conversation:
-${messages.join("\n")}
+You are helping me reply on LinkedIn.
 
-Suggest 3 professional LinkedIn replies.
-Keep each reply short and natural.
+Messages are labeled:
+"me" = messages I sent
+"other" = messages from the other person
+
+Conversation:
+${JSON.stringify(messages, null, 2)}
+
+Suggest 3 professional replies for ME to send next.
+Keep them short, natural, and context-aware.
 `;
 
     const response = await fetch(
