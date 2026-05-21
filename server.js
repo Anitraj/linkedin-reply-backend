@@ -54,9 +54,10 @@ if (!data.choices || !data.choices.length) {
 
 const text = data.choices[0].message.content;
 
-const suggestions = text
-  .split("\n")
-  .filter(line => line.trim());
+const suggestions = content
+  .split(/\d+\.\s\*\*Reply \d+\*\*/)
+  .map(s => s.trim())
+  .filter(Boolean);
 
 res.json({ suggestions });
 
