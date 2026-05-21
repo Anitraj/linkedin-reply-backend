@@ -61,12 +61,25 @@ Suggest 3 short, natural, professional replies for me to send.
     }
 
     const text =
-      data.choices[0].message.content;
+  data.choices[0].message.content;
 
-    // Send whole response as ONE suggestion
-    res.json({
-      suggestions: [text]
-    });
+// Split by numbered replies: 1. 2. 3.
+const suggestions = text
+  .split(/\n\s*\d+\.\s+/)
+  .map(s => s.trim())
+  .filter(Boolean);
+
+// Remove intro like "Here are three..."
+if (
+  suggestions.length &&
+  suggestions[0].toLowerCase().includes("here are")
+) {
+  suggestions.shift();
+}
+
+res.json({
+  suggestions
+});
 
   } catch (error) {
     console.error(error);
