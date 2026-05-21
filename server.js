@@ -43,34 +43,46 @@ Suggest 3 short, natural, professional replies for me to send.
     );
 
     const data = await response.json();
-console.log("Groq response:", JSON.stringify(data, null, 2));
-console.log("OpenAI response:", data);
 
-if (!data.choices || !data.choices.length) {
-  return res.status(500).json({
-    error: data.error || "OpenAI returned no choices"
-  });
-}
+    console.log(
+      "Groq response:",
+      JSON.stringify(data, null, 2)
+    );
 
-const text = data.choices[0].message.content;
+    if (
+      !data.choices ||
+      !data.choices.length
+    ) {
+      return res.status(500).json({
+        error:
+          data.error ||
+          "Groq returned no choices"
+      });
+    }
 
-const suggestions = content
-  .split(/\d+\.\s\*\*Reply \d+\*\*/)
-  .map(s => s.trim())
-  .filter(Boolean);
+    const text =
+      data.choices[0].message.content;
 
-res.json({ suggestions });
+    // Send whole response as ONE suggestion
+    res.json({
+      suggestions: [text]
+    });
 
   } catch (error) {
     console.error(error);
+
     res.status(500).json({
       error: "Something went wrong"
     });
   }
 });
 
-const PORT = process.env.PORT || 3000;
+const PORT =
+  process.env.PORT || 3000;
 
 app.listen(PORT, () => {
-  console.log("Server running on port", PORT);
+  console.log(
+    "Server running on port",
+    PORT
+  );
 });
